@@ -1,35 +1,60 @@
-"use strict";
-let main = document.querySelector(".main-block");
-let ball = document.querySelector(".ball");
-let mainCoords = main.getBoundingClientRect();
+const encryptButton = document.querySelector('.encrypt-btn');
+const decryptButton = document.querySelector('.decrypt-btn');
+const message = document.getElementById('message');
+const shift = document.getElementById('shift');
+const cipher = document.getElementById('cipher');
 
-main.onmousemove = function (event) {
+const alphabet = 'АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ';
 
+class CaesarCipher{
+  constructor(alphabet, message, shift, cipher) {
+    this.alphabet = alphabet;
+    this.message = message;
+    this.shift = shift;
+    this.cipher = cipher;
+  }
 
-  let ballCoords = {
-    top: event.clientY - mainCoords.top - main.clientTop - ball.clientHeight / 2,
-    left: event.clientX - mainCoords.left - main.clientLeft - ball.clientWidth / 2
+  shiftAlphabet = (shift) => {
+    let shiftedAlphabet = '';
+    for (let i = 0; i < this.alphabet.length; i++) {
+      const currentText = (this.alphabet[i + shift] === undefined)
+          ? (this.alphabet[i + shift - this.alphabet.length])
+          : (this.alphabet[i + shift]);
+      shiftedAlphabet = shiftedAlphabet.concat(currentText);
+    }
+    return shiftedAlphabet;
   };
 
+  coder = (text, status) => {
+    const shifting = parseInt(this.shift.value);
+    const shiftedAlphabet = this.shiftAlphabet(shifting);
+    let crypticMessage = '';
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === ' ') {
+        crypticMessage = crypticMessage.concat(' ');
+      } else if(status === 'encrypt'){
+        const indexOfLetter = this.alphabet.indexOf(text[i].toUpperCase());
+        crypticMessage = crypticMessage.concat(shiftedAlphabet[indexOfLetter]  || '*');
+      } else {
+        const indexOfLetter = shiftedAlphabet.indexOf(text[i].toUpperCase());
+        crypticMessage = crypticMessage.concat(this.alphabet[indexOfLetter] || '*');
+      }
+    }
+    return crypticMessage.toLowerCase();
+  };
 
-  if (ballCoords.top < 0) ballCoords.top = 0;
-  if (ballCoords.left < 0) ballCoords.left = 0;
-  if (ballCoords.left + ball.clientWidth > main.clientWidth) {
-    ballCoords.left = main.clientWidth - ball.clientWidth;
-  }
-  if (ballCoords.top + ball.clientHeight > main.clientHeight) {
-    ballCoords.top = main.clientHeight - ball.clientHeight;
-  }
+  encrypt = () => {
+    const text = this.message.value;
+    this.cipher.value = this.coder(text, 'encrypt');
+  };
 
-  ball.style.left = ballCoords.left + 'px';
-  ball.style.top = ballCoords.top + 'px';
-};
+  decrypt = () => {
+    const text = this.cipher.value;
+    this.message.value = this.coder(text, 'decrypt');
+  };
+}
 
+const caesarCipher = new CaesarCipher(alphabet, message, shift, cipher);
 
-document.onmousemove = function (event) {
-  if (event.clientX > mainCoords.left && event.clientX < mainCoords.right && event.clientY > mainCoords.top && event.clientY < mainCoords.bottom) {
-    ball.style.display = "block";
-  } else {
-    ball.style.display = "none";
-  }
-};
+encryptButton.addEventListener('click', caesarCipher.encrypt );
+decryptButton.addEventListener('click', caesarCipher.decrypt );
