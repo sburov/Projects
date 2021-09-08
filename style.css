@@ -1,0 +1,57 @@
+.main-block {
+    width: 90%;
+    position: relative;
+    background: white;
+    border: darkslateblue solid 2px;
+    cursor: none;
+    height: 20rem;
+    margin: 10% auto;
+}
+
+.ball {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background-color: lightblue;
+    z-index: 2;
+    display: none;
+}
+
+.text {
+    z-index: 3;
+    font-family: "Californian FB", fantasy;
+    font-size: 130%;
+    position: absolute;
+    margin-top: 10rem;
+    margin-left: 70%;
+    color: darkslateblue;
+}
+
+div[class^='block-'] {
+    display: inline-block;
+    position: absolute;
+    width: 33.33%;
+    height: 20rem;
+    background-color: darkslateblue;
+}
+
+.block-0 {
+    opacity: 30%;
+    z-index: 3;
+    margin-left: 0;
+}
+
+.block-1 {
+    opacity: 50%;
+    z-index: 3;
+    margin-left: 33.33%;
+}
+
+.block-2 {
+    opacity: 100%;
+    z-index: 1;
+    margin-left: 66.66%;
+    float: left;
+    width: 30rem;
+}
